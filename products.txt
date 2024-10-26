@@ -1,0 +1,4 @@
+1,Americano,50.0
+2,Latte,55.0
+3,Brownie,45.0
+4,Cheesecake,70.0
