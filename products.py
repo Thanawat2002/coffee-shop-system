@@ -6,17 +6,12 @@ def read_products():
   return read_file(PRODUCTS_FILE)
 
 def add_product():
-  try:
-    with open(PRODUCTS_FILE, "r") as file:
-        lines = file.readlines()
-        if lines:
-            last_line = lines[-1]
-            last_id = int(last_line.split(",")[0]) 
-            new_id = last_id + 1
-        else:
-            new_id = 1  
-  except FileNotFoundError:
-    new_id = 1 
+  products = read_products()
+  if products:
+    last_id = int(products[-1].split(",")[0])
+    new_id = last_id + 1
+  else:
+    new_id = 1
 
   name = input("Enter product name: ")
   price = float(input("Enter price: "))
