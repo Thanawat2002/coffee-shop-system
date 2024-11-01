@@ -84,6 +84,7 @@ def reports_menu():
     print("1. Daily sales")
     print("2. Sales by employee")
     print("3. Total sales")
+    print("4. Calculate Commission")
     print("0. Back")
 
     choice = input("Enter your choice: ")
@@ -94,6 +95,8 @@ def reports_menu():
       report_sales_by_employee()
     elif choice == '3':
       report_total_sales()
+    elif choice == '4':
+      calculate_commission()
     elif choice == '0':
       break
     else:

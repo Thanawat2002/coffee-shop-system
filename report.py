@@ -13,7 +13,7 @@ def report_daily_sales():
     if date == str(today):
       total_sales += float(sale.split(",")[4])
   
-  print("Sales separated by product:")
+  # print("Sales separated by product:")
 
   products = {}
   for sale in sales:
@@ -26,10 +26,15 @@ def report_daily_sales():
       else:
         products[product_name] = price
 
-  for product, price in products.items():
-    print(f"{product}: {price} bath")
+  # for product, price in products.items():
+  #   print(f"{product}: {price} bath")
 
-  print(f"Total sales for {today}: {total_sales} bath")
+  # print(f"Total sales for {today}: {total_sales} bath")
+  header_table = f"|{'No.':^10}|{'Product':^20}|{'Price':^10}|"
+  data_table = []
+  for i, (product, price) in enumerate(products.items(), 1):
+    data_table.append([i,product,price])
+  report_table(header_table, data_table, total_sales, today)
 
 def report_sales_by_employee():
   sales = read_file(SALES_FILE)
@@ -43,8 +48,13 @@ def report_sales_by_employee():
     else:
       employees[employee_id] = {"name": employee_name, "sales": float(sale.split(",")[4])}
 
-  for employee_id, data in employees.items():
-    print(f"{data['name']} sold {data['sales']} bath")
+  # for employee_id, data in employees.items():
+  #   print(f"{data['name']} sold {data['sales']} bath")
+  header_table = f"|{'No.':^10}|{'Employee':^20}|{'Sales':^10}|"
+  data_table = []
+  for i, (employee_id, data) in enumerate(employees.items(), 1):
+    data_table.append([i,data['name'],data['sales']])
+  report_table(header_table, data_table)
 
 def report_total_sales():
   sales = read_file(SALES_FILE)
@@ -64,13 +74,30 @@ def calculate_commission():
     else:
       employee_sales[employee_id] = price
 
-  for employee in employees:
+  header_table = f"|{'No.':^10}|{'Employee':^20}|{'Commission':^10}|"
+  data_table = []
+  for i, employee in enumerate(employees, 1):
     employee_id = employee.split(",")[0]
     employee_name = employee.split(",")[1]
     commission = float(employee.split(",")[2])
     if employee_id in employee_sales:
       total_sales = employee_sales[employee_id]
       total_commission = total_sales * commission / 100
-      print(f"{employee_name} sold {total_sales} bath and earned {total_commission} bath in commission")
+      data_table.append([i,employee_name,total_commission])
     else:
-      print(f"{employee_name} sold 0 bath and earned 0 bath in commission")
+      data_table.append([i,employee_name,0])
+  report_table(header_table, data_table)
+  
+def report_table(header, data, total_sales = None, today = None):
+  separator = "=" * 44
+
+  if today:
+    print(f"\nTotal sales for {today}".center(len(separator)))
+  print(separator)
+  print(header)
+  print(separator)
+  for row in data:
+    print(f"|{row[0]:^10}:{row[1]:^20}:{row[2]:^10}|")
+  print(separator)
+  if total_sales:
+    print(f"Total sales: {total_sales} bath")
