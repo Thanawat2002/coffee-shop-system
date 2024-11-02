@@ -81,33 +81,34 @@ def report_total_sales():
   print(data_table)
   report_table(header_table, data_table, total_sales)
 
-
 def calculate_commission():
-  sales = read_file(SALES_FILE)
-  employees = read_file("employees.txt")
-  
-  employee_sales = {}
-  for sale in sales:
-    employee_id = sale.split(",")[0]
-    price = float(sale.split(",")[4])
-    if employee_id in employee_sales:
-      employee_sales[employee_id] += price
-    else:
-      employee_sales[employee_id] = price
+    sales = read_file(SALES_FILE)
+    employees = read_file("employees.txt")
+    
+    employee_sales = {}
+    for sale in sales:
+        employee_id = sale.split(",")[0]
+        price = float(sale.split(",")[4])
+        if employee_id in employee_sales:
+            employee_sales[employee_id] += price
+        else:
+            employee_sales[employee_id] = price
 
-  header_table = f"|{'No.':^10}|{'Employee':^20}|{'Commission':^10}|"
-  data_table = []
-  for i, employee in enumerate(employees, 1):
-    employee_id = employee.split(",")[0]
-    employee_name = employee.split(",")[1]
-    commission = float(employee.split(",")[2])
-    if employee_id in employee_sales:
-      total_sales = employee_sales[employee_id]
-      total_commission = total_sales * commission / 100
-      data_table.append([i,employee_name,total_commission])
-    else:
-      data_table.append([i,employee_name,0])
-  report_table(header_table, data_table)
+    header_table = f"|{'No.':^10}|{'Employee':^20}|{'Total Sales':^15}|{'Commission':^18}|"
+    data_table = []
+    for i, employee in enumerate(employees, 1):
+        employee_id = employee.split(",")[0]
+        employee_name = employee.split(",")[1]
+        commission_rate = float(employee.split(",")[2]) 
+        if employee_id in employee_sales:
+            total_sales = employee_sales[employee_id]
+            total_commission = total_sales * commission_rate / 100
+            data_table.append([i, employee_name, total_sales, total_commission])
+        else:
+            data_table.append([i, employee_name, 0, 0])  
+
+    report_table(header_table, data_table)
+
 
 def report_table(header, data, total_sales = None, today = None):
   separator = "=" * len(header)
