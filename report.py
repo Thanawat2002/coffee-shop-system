@@ -58,8 +58,29 @@ def report_sales_by_employee():
 
 def report_total_sales():
   sales = read_file(SALES_FILE)
-  total_sales = sum([float(sale.split(",")[4]) for sale in sales])
-  print(f"Total sales: {total_sales} bath")
+  total_sales = 0
+  products = {}
+
+  for sale in sales:
+      product_name = sale.split(",")[2]
+      price = float(sale.split(",")[4])
+      date = sale.split(",")[-1].split()[0]
+      total_sales += price
+      if product_name in products:
+          products[product_name].append((date, price))
+      else:
+          products[product_name] = [(date, price)]
+
+  header_table = f"|{'No.':^10}|{'Product':^20}|{'Date':^15}|{'Total Sales (Bath)':^15}|"
+  data_table = []
+  i = 1
+  for product, sales_data in products.items():
+      for date, price in sales_data:
+          data_table.append([i, product, date, price])
+          i += 1
+  print(data_table)
+  report_table(header_table, data_table, total_sales)
+
 
 def calculate_commission():
   sales = read_file(SALES_FILE)
@@ -87,9 +108,9 @@ def calculate_commission():
     else:
       data_table.append([i,employee_name,0])
   report_table(header_table, data_table)
-  
+
 def report_table(header, data, total_sales = None, today = None):
-  separator = "=" * 44
+  separator = "=" * len(header)
 
   if today:
     print(f"\nTotal sales for {today}".center(len(separator)))
@@ -97,7 +118,7 @@ def report_table(header, data, total_sales = None, today = None):
   print(header)
   print(separator)
   for row in data:
-    print(f"|{row[0]:^10}:{row[1]:^20}:{row[2]:^10}|")
+    print(f"|{row[0]:^10}|{row[1]:^20}|{row[2]:^15}|{row[3]:^18}|" if len(row) == 4 else f"|{row[0]:^10}|{row[1]:^20}|{row[2]:^10}|")
   print(separator)
   if total_sales:
-    print(f"Total sales: {total_sales} bath")
+    print(f"Daily total sales: {total_sales} bath")
